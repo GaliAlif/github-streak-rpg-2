@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0d12">
+  <meta name="description" content="GitHub Streak RPG — turn public GitHub activity into a transparent developer RPG dashboard.">
+  <title>GitHub Streak RPG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <div class="ambient ambient-purple"></div>
+    <div class="ambient ambient-cyan"></div>
+
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="GitHub Streak RPG home">
+        <span class="brand-mark">◆</span>
+        <span>GITHUB <b>STREAK</b> RPG</span>
+      </a>
+      <div class="topbar-actions">
+        <span class="api-status"><i></i> GitHub API</span>
+        <button class="icon-btn" id="aboutBtn" aria-label="About GitHub Streak RPG">?</button>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero-section">
+        <div class="hero-copy">
+          <div class="eyebrow">DEVELOPER // CHARACTER SHEET</div>
+          <h1>Turn your GitHub<br><span>journey into an RPG.</span></h1>
+          <p>Public GitHub data becomes a transparent progression system — no fake commits, no secret scores, just your real profile plus clearly labeled RPG estimates.</p>
+        </div>
+        <form class="search-card" id="searchForm">
+          <label for="username">ENTER GITHUB USERNAME</label>
+          <div class="search-row">
+            <div class="input-wrap"><span>@</span><input id="username" name="username" autocomplete="off" placeholder="octocat" maxlength="39" required></div>
+            <button class="primary-btn" type="submit"><span>LOAD CHARACTER</span><b>↗</b></button>
+          </div>
+          <p class="search-hint">Uses public GitHub REST API. No token required.</p>
+        </form>
+      </section>
+
+      <section id="statusRegion" class="status-region" aria-live="polite"></section>
+
+      <section id="dashboard" class="dashboard hidden" aria-label="Developer dashboard">
+        <div class="profile-panel glass-panel">
+          <div class="profile-main">
+            <div class="avatar-wrap"><img id="avatar" alt="" src=""><span class="online-dot"></span></div>
+            <div class="profile-copy">
+              <div class="profile-kicker"><span id="profileLogin">@username</span><span class="verified-pill">PUBLIC PROFILE</span></div>
+              <h2 id="profileName">Developer</h2>
+              <p id="profileBio">No public bio.</p>
+              <div class="profile-meta"><span id="profileLocation">◎ Location unavailable</span><a id="profileLink" href="#" target="_blank" rel="noopener">↗ github.com</a></div>
+            </div>
+          </div>
+          <div class="profile-stats">
+            <div><strong id="repoCount">0</strong><span>PUBLIC REPOS</span></div>
+            <div><strong id="followerCount">0</strong><span>FOLLOWERS</span></div>
+            <div><strong id="followingCount">0</strong><span>FOLLOWING</span></div>
+          </div>
+        </div>
+
+        <div class="level-panel glass-panel">
+          <div class="level-orb"><span>LVL</span><strong id="levelValue">1</strong></div>
+          <div class="level-content">
+            <div class="section-label">DEVELOPER LEVEL <span id="levelTitle">INITIATE</span></div>
+            <div class="xp-line"><strong id="xpValue">0 XP</strong><span id="xpNext">/ 100 XP</span></div>
+            <div class="xp-track"><div id="xpBar"></div></div>
+            <div class="level-foot"><span id="xpProgress">0 / 100</span><span id="xpRule">XP is an estimate from public profile signals.</span></div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card glass-panel"><span class="stat-icon purple">⌘</span><div><span>REPOSITORIES</span><strong id="statRepos">0</strong><small>Public repositories</small></div></article>
+          <article class="stat-card glass-panel"><span class="stat-icon cyan">★</span><div><span>STARS EARNED</span><strong id="statStars">0</strong><small>Across public repos</small></div></article>
+          <article class="stat-card glass-panel"><span class="stat-icon gold">⑂</span><div><span>FORKS EARNED</span><strong id="statForks">0</strong><small>Across public repos</small></div></article>
+          <article class="stat-card glass-panel"><span class="stat-icon white">◒</span><div><span>ACCOUNT AGE</span><strong id="statAge">—</strong><small id="statAgeDetail">Since —</small></div></article>
+        </div>
+
+        <div class="main-grid">
+          <section class="glass-panel quests-panel">
+            <div class="panel-header"><div><span class="section-label">DAILY MISSIONS</span><h3>Quest Board</h3></div><span class="reset-label" id="questReset">LOCAL PROGRESS</span></div>
+            <div id="questList" class="quest-list"></div>
+            <div class="quest-note">Quests reward <b>self-reported actions</b> only. They never pretend to be GitHub activity.</div>
+          </section>
+
+          <section class="glass-panel achievements-panel">
+            <div class="panel-header"><div><span class="section-label">MILESTONES</span><h3>Achievements</h3></div><span id="achievementCount" class="achievement-count">0 / 0</span></div>
+            <div id="achievementList" class="achievement-list"></div>
+          </section>
+        </div>
+
+        <section class="glass-panel heatmap-panel" aria-labelledby="heatmapTitle">
+          <div class="panel-header heatmap-heading">
+            <div><span class="section-label">ACTIVITY MATRIX</span><h3 id="heatmapTitle">Contribution Heatmap</h3></div>
+            <span class="source-pill">OPTIONAL · THIRD-PARTY SOURCE</span>
+          </div>
+          <div class="heatmap-controls">
+            <p>Load the public contribution calendar from a community API. No GitHub token needed.</p>
+            <div class="heatmap-actions"><button id="loadHeatmapBtn" class="secondary-btn" type="button">LOAD HEATMAP <span>↗</span></button><button id="retryHeatmapBtn" class="heatmap-retry hidden" type="button">RETRY</button></div>
+          </div>
+          <div id="heatmapStatus" class="heatmap-status" role="status" aria-live="polite"><span class="unavailable-icon">▦</span><div><strong>Contribution calendar not loaded</strong><p>Choose “Load Heatmap” to request real contribution data. If the service is unavailable, this panel will explain why instead of inventing values.</p></div></div>
+          <div id="heatmapResults" class="heatmap-results hidden">
+            <div class="heatmap-summary"><div><span class="heatmap-summary-label">CONTRIBUTIONS IN LOADED WINDOW</span><strong id="heatmapTotal">—</strong></div><div><span class="heatmap-summary-label">DAYS WITH CONTRIBUTIONS</span><strong id="heatmapActiveDays">—</strong></div><div><span class="heatmap-summary-label">DATA WINDOW</span><strong id="heatmapRange">—</strong></div></div>
+            <div class="heatmap-scroll"><div class="heatmap-weekdays" aria-hidden="true"><span>Mon</span><span>Wed</span><span>Fri</span></div><div id="heatmapGrid" class="heatmap-grid" aria-label="Daily GitHub contributions"></div></div>
+            <div class="heatmap-legend"><span>LESS</span><i class="heat-cell level-0"></i><i class="heat-cell level-1"></i><i class="heat-cell level-2"></i><i class="heat-cell level-3"></i><i class="heat-cell level-4"></i><span>MORE</span></div>
+            <p class="heatmap-attribution">Source: <a href="https://github.com/grubersjoe/github-contributions-api" target="_blank" rel="noopener">GitHub Contributions API by grubersjoe</a> · <a id="heatmapRawLink" href="https://github-contributions-api.jogruber.de/" target="_blank" rel="noopener">View returned data</a> · Data is scraped from the public GitHub profile and may be cached for about one hour.</p>
+          </div>
+          <details class="heatmap-disclosure"><summary>Source & limitations</summary><p>This optional integration requests <code>https://github-contributions-api.jogruber.de/v4/{username}?y=last</code>. The service scrapes the contribution graph shown on public GitHub profiles; it is not an official GitHub API. It may be delayed, rate-limited, temporarily unavailable, or stop working if GitHub changes its page markup. Only display data returned and validated by the service. Private activity is not exposed, and this calendar is not proof of every kind of work. No access token is sent or stored.</p></details>
+        </section>
+
+        <section class="glass-panel repos-panel">
+          <div class="panel-header"><div><span class="section-label">PUBLIC INVENTORY</span><h3>Repository Arsenal</h3></div><span id="repoSortLabel">Sorted by stars</span></div>
+          <div id="repoList" class="repo-list"></div>
+        </section>
+
+        <section class="bottom-actions">
+          <div class="share-card glass-panel">
+            <div><span class="section-label">SHARE YOUR BUILD</span><h3>Show the character sheet.</h3><p>Copy a compact shareable summary for your profile or friends.</p></div>
+            <button class="secondary-btn" id="shareBtn">COPY DEVELOPER CARD <span>↗</span></button>
+          </div>
+          <div class="data-note glass-panel"><span class="data-lock">◇</span><div><strong>Data integrity first.</strong><p>GitHub values are fetched live. RPG XP and levels are estimates based on transparent rules and are never presented as official GitHub metrics.</p></div></div>
+        </section>
+      </section>
+    </main>
+
+    <footer><span>GITHUB STREAK RPG</span><span>PUBLIC DATA • LOCAL PROGRESS • NO TOKEN</span></footer>
+  </div>
+
+  <div class="modal hidden" id="aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+    <div class="modal-card glass-panel"><button class="modal-close" id="modalClose">×</button><span class="section-label">SYSTEM NOTES</span><h2 id="aboutTitle">How the RPG works</h2><div class="modal-copy"><p><b>API data:</b> profile, public repositories, followers, following, stars, forks, and account creation date come from GitHub's public REST API.</p><p><b>Estimated XP:</b> repos × 20 + stars × 5 + forks × 8 + followers × 3, capped to sensible UI ranges. This is a game score, not a GitHub metric.</p><p><b>Achievements:</b> unlock only from returned public data or actions you explicitly complete locally.</p><p><b>Contribution calendar:</b> an optional community API scrapes the public contribution graph. It can be delayed or unavailable and is not an official GitHub API.</p><p><b>Privacy:</b> no access token is requested or stored. Daily quest completion lives in your browser's localStorage.</p></div></div>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
